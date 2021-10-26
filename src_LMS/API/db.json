@@ -1,0 +1,51 @@
+{
+    "favoriteSong": [
+      {
+        
+      }
+    ],
+    "comments": [],
+    "profile": {
+      "name": "typicode"
+    },
+    "data": [
+        {
+           "id": "1",
+            "nama": " Raynoldus Sahulata",
+            "MK": "Risk Management"                   
+          },
+
+          {
+           "id": "2",
+            "nama": "Lidya Laoh",
+            "MK": "Data Struct"                  
+          },
+
+          {
+           "id": "3",
+            "nama": "Yuan Mambu",
+            "MK": "Knownledge Management"                   
+          },
+
+          {
+           "id": "4",
+            "nama": "Stenly Adam",
+            "MK": "Mobile Programming"                   
+          },
+          {
+           "id": "5",
+            "nama": "Green Mandias",
+            "MK": "Organization Behaviour"                  
+          },
+          {
+            "id": "6",
+            "nama": "Andrew Tanny Liem",
+            "MK":  "Research Project 1"                  
+          },
+          {
+            "id": "7",
+            "nama": "Green Sandag",
+            "MK":  "Data Mining"                  
+          }
+    ]
+  }
