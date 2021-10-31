@@ -18,36 +18,43 @@ const App =()=> {
       colors:{...NavigationDefaultTheme.colors, ...PaperDefaultTheme.colors, background: '#ffffff',  text: '#333333', }
     }
 
-    
+
     const CustomeDarkTheme ={...NavigationDarkTheme, ...PaperDarkTheme,
       colors:{ ...NavigationDarkTheme.colors, ...PaperDarkTheme.colors, background: '#333333',text: '#ffffff', }
     }
 
     const theme = isDarkTheme? CustomeDarkTheme: CustomDefaultTheme;
-    // const theme = ChangeTheme? CustomeDarkTheme: CustomDefaultTheme;
 
     const authContext = React.useMemo(()=>({
         toggleTheme:  ()=>{
-          // setisDarkTheme(!isDarkTheme)
-          setChangeTheme(!ChangeTheme); 
+          if(ChangeTheme==true){
+            setChangeTheme(false);
+            setvalue(false);
+            console.log("true change theme:", ChangeTheme)
+          }
+
+          if(ChangeTheme==false){
+
+            setChangeTheme(true);
+            setvalue(true);
+            console.log("false change theme:", ChangeTheme)
+          }
+          getData();
         }
     }))
 
-    useEffect(() => {
-      setvalue(ChangeTheme);
-    }, [ChangeTheme])
-
     const setvalue = async (ChangeTheme)=>{
-        try {
-          const jsonValue = JSON.stringify(ChangeTheme)
-          await AsyncStorage.setItem('SWICTH_THEME', jsonValue)
-          console.log("set value, json value:", jsonValue)
-          // console.log("set value") 
-          getData()
-        } catch (e) {
-          console.log("error:",e)
-        }
-    }
+      try {
+        const jsonValue = JSON.stringify(ChangeTheme)
+        await AsyncStorage.setItem('SWICTH_THEME', jsonValue)
+      } catch (e) {
+        console.log("error:",e)
+      }
+  }
+
+    useEffect(() => {
+      getData()
+    }, [])
 
     const getData = () => {
       try {
@@ -55,13 +62,23 @@ const App =()=> {
               .then(value => {
                     //  console.log("get value") 
                       let stringVar = value;
-                      let boolVar = stringVar.toLowerCase() == 'true' ? true : false;
+                      let boolVar = stringVar.toLowerCase();
+                      if(stringVar=='true'){
+                          boolVar=true
+                      }
+                      else if(stringVar=='false'){
+                        boolVar=false
+                      }
+                      else{
+                        boolVar=false
+                      }
+
                       console.log("get value, value di getITem:", boolVar)//returns true
                       setisDarkTheme(boolVar)
-                      // setChangeTheme(value)
+                      setChangeTheme(boolVar)
                 })
       } catch (error) {
-          console.log(error);
+          console.log("error:",error);
       }
   }
 

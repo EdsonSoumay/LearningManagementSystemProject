@@ -1,2 +1,2 @@
-import MainTabScreen from "./TabStudentPage";
-export {MainTabScreen};
+import TabScreen from "../../Router/StudentBotomTab";
+export {TabScreen};

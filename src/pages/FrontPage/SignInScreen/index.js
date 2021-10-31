@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { 
     View, 
     Text, 
@@ -13,14 +13,11 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { AuthContext } from '../../../components/context';
+import { AuthContext } from '../../../components/AutContext/context';
 import { useTheme } from 'react-native-paper';
 
-// import { atan } from 'react-native-reanimated';
-// import { sin } from 'react-native/Libraries/Animated/Easing';
-
 import Users from '../../../model/users'
-import { color } from 'react-native-reanimated';
+import axios from 'axios';
 
 const SignInScreen = (props) => {
 
@@ -96,8 +93,19 @@ const SignInScreen = (props) => {
         }
     }
 
-    const loginHandle = (userName, password)=>{
+        
 
+    const loginHandle = (userName, password)=>{
+        // const apiURL = 'http://10.0.2.2:3000/user';
+        // axios.get(apiURL).then( 
+        //     getRes =>{
+        //         getRes.data.map(item=>
+        //             console.log("item:",item)
+        //             )
+        //     }
+        // )
+
+        // console.log("apiURL:", apiURL)
         const foundUser = Users.filter(item => {
             return userName == item.username && password == item.password;
         });
@@ -137,6 +145,7 @@ const SignInScreen = (props) => {
                         size= {20}
                     />
                     <TextInput
+                        placeholderTextColor={colors.placeHolderText}
                         placeholder ="your Username"
                         style={[styles.textInput, {
                             color: colors.text
@@ -166,7 +175,8 @@ const SignInScreen = (props) => {
                 }
 
                 <Text style={[styles.text_footer,{
-                        marginTop: 35
+                        marginTop: 35,
+                        color: colors.text
                 }]}>Password</Text>
                 <View style ={styles.action}>
                     <FontAwesome
@@ -176,6 +186,7 @@ const SignInScreen = (props) => {
                     />
                     <TextInput
                         placeholder ="your Password"
+                        placeholderTextColor={colors.placeHolderText}
                         style={[styles.textInput, {
                             color: colors.text
                         }]}
@@ -308,6 +319,9 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
+    },
+    somePlaceholderStyle:{
+        color:'white'
     }
   });
 

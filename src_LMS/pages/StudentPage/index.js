@@ -292,18 +292,18 @@ const HomeStackScreen = ({navigation, data})=>{
               }
           }}>
               <Stack.Screen name="HomeStack" children={(props)=><AllClass data={data} {...props}/>}
-                  options ={{
-                     headerShown: false,
-                     headerLeft: ()=>(
+                  // options ={{
+                  //    headerShown: false,
+                  //    headerLeft: ()=>(
 
-                      <TouchableOpacity onPress={()=>{navigation.openDrawer()}}>
-                              <Image
-                                  style={{ width: 23, height: 40, marginLeft: 15}}
-                                  resizeMode={'contain'}
-                                  source={hamIcon} />
-                  </TouchableOpacity>
-                     )
-                  }}
+                  //     <TouchableOpacity onPress={()=>{navigation.openDrawer()}}>
+                  //             <Image
+                  //                 style={{ width: 23, height: 40, marginLeft: 15}}
+                  //                 resizeMode={'contain'}
+                  //                 source={hamIcon} />
+                  // </TouchableOpacity>
+                  //    )
+                  // }}
               />
               <Stack.Screen name="ActiveClass" component={ActiveClass} options ={{headerShown: false}} />
               <Stack.Screen name="Settings" component={Settings} options ={{headerShown: false}} />
