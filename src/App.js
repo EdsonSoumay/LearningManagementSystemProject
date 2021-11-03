@@ -34,8 +34,10 @@ import MainTabScreen from './Router/StudentBotomTab'
 
 //==>redux
 import { Provider } from 'react-redux'
-import { storeState, storeStateDrawerId } from './config/redux_Active_Class'
+import { storeState, storeStateDrawerId } from './config/redux/index'
 //==>redux
+
+import FlashMessage from "react-native-flash-message";
 
 
 const HomeStack = createStackNavigator();
@@ -44,7 +46,7 @@ const Drawer = createDrawerNavigator();
  
 
 
-const App =()=> {
+const App2 =()=> {
 
   const [isDarkTheme, setisDarkTheme] = React.useState(false);
   const [ChangeTheme, setChangeTheme] = useState(false);
@@ -122,7 +124,7 @@ const App =()=> {
         signIn: async (foundUser)=>{
             // setuserToken('fgkj');
             // setIsLoading(false);
-            console.log("found User:", foundUser)
+            // console.log("found User:", foundUser)
             const userToken = String(foundUser[0].userToken);
             const userName = foundUser[0].username;
               try{
@@ -254,6 +256,7 @@ const App =()=> {
             )
             :
             <RootStackScreen/>
+            
             }  
         </NavigationContainer>
        </AuthContext.Provider>
@@ -262,6 +265,16 @@ const App =()=> {
     )
 }
 
+
+const App =()=>{
+
+return(
+    <>
+       <App2/>
+       <FlashMessage position="top" />
+   </>
+   )
+}
 export default App;
 
 const styles = StyleSheet.create({})

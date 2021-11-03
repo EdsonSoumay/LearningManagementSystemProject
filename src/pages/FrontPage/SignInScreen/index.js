@@ -18,6 +18,7 @@ import { useTheme } from 'react-native-paper';
 
 import Users from '../../../model/users'
 import axios from 'axios';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const SignInScreen = (props) => {
 
@@ -96,34 +97,86 @@ const SignInScreen = (props) => {
         
 
     const loginHandle = (userName, password)=>{
-        // const apiURL = 'http://10.0.2.2:3000/user';
-        // axios.get(apiURL).then( 
-        //     getRes =>{
-        //         getRes.data.map(item=>
-        //             console.log("item:",item)
-        //             )
-        //     }
-        // )
 
-        // console.log("apiURL:", apiURL)
-        const foundUser = Users.filter(item => {
-            return userName == item.username && password == item.password;
-        });
+        //sudah pakai json server
+        const apiURL = 'http://10.0.2.2:3000/user';
+        axios.get(apiURL).then( 
+           res =>{
+                           
+                // res.data.map(item=>{    
+                          
+
+                //     if(userName==item.username && password == item.password){
+                //             let arr = []                       
+                //             arr.push(item)
+                //             signIn(arr)      
+                //         }
+                
+                //         // if(userName!==item.username && password !== item.password){                      
+                //         //   showMessage({
+                //         //           message: 'Invalid User! Username sor password is incorrect',
+                //         //           type: 'default',
+                //         //           backgroundColor: '#B22222', // background color
+                //         //           color: 'white'
+                //         //      })
+                //         //     }
+                // })
+
+              let a = res.data.map(item=>{    
+                if(userName==item.username && password == item.password ){
+                            return item;
+                    }
+                    
+                })
+
+                console.log("a",a)
+                
+                  if(data.username.length==0 || data.password.length == 0){
+                    Alert.alert('Wrong Input!', 'Username or password filed cannot be empty',[
+                        {text:'Okay'}
+                    ]);
+                    return;
+                }
         
-        if(data.username.length==0 || data.password.length == 0){
-            Alert.alert('Wrong Input!', 'Username or password filed cannot be empty',[
-                {text:'Okay'}
-            ]);
-            return;
-        }
+                if(a[0]==undefined){
+                    Alert.alert('Invalid User!', 'Username or password is incorrect',[
+                        {text:'Okay'}
+                    ]);
+                    return;
+                }
+                signIn(a)
+               
+            }
+        )
+
         
-        if(foundUser.length==0){
-            Alert.alert('Invalid User!', 'Username or password is incorrect',[
-                {text:'Okay'}
-            ]);
-            return;
-        }
-        signIn(foundUser)
+      
+        //// belum pakai json server
+
+        // const foundUser = Users.filter(item => {
+        //     // return userName == item.username && password == item.password;
+        //     if(userName==item.username && password == item.password ){
+        //         return item;
+        //     }
+
+        // });
+
+        // console.log("found user:", foundUser)
+        
+        // if(data.username.length==0 || data.password.length == 0){
+        //     Alert.alert('Wrong Input!', 'Username or password filed cannot be empty',[
+        //         {text:'Okay'}
+        //     ]);
+        //     return;
+        // }
+        
+        // if(foundUser.length==0){
+        //     Alert.alert('Invalid User!', 'Username or password is incorrect',[
+        //         {text:'Okay'}
+        //     ]);
+        //     return;
+        // }
+        // signIn(foundUser)
     }
 
     return (
