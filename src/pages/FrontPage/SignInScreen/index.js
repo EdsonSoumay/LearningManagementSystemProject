@@ -98,39 +98,17 @@ const SignInScreen = (props) => {
 
     const loginHandle = (userName, password)=>{
 
-        //sudah pakai json server
+        //  sudah pakai json server
         const apiURL = 'http://10.0.2.2:3000/user';
         axios.get(apiURL).then( 
            res =>{
-                           
-                // res.data.map(item=>{    
-                          
-
-                //     if(userName==item.username && password == item.password){
-                //             let arr = []                       
-                //             arr.push(item)
-                //             signIn(arr)      
-                //         }
-                
-                //         // if(userName!==item.username && password !== item.password){                      
-                //         //   showMessage({
-                //         //           message: 'Invalid User! Username sor password is incorrect',
-                //         //           type: 'default',
-                //         //           backgroundColor: '#B22222', // background color
-                //         //           color: 'white'
-                //         //      })
-                //         //     }
-                // })
-
-              let a = res.data.map(item=>{    
+              let a = res.data.filter(item=>{    
                 if(userName==item.username && password == item.password ){
-                            return item;
-                    }
-                    
+                    console.log("data di signIn:", item)
+                    return item;
+                    }    
                 })
 
-                console.log("a",a)
-                
                   if(data.username.length==0 || data.password.length == 0){
                     Alert.alert('Wrong Input!', 'Username or password filed cannot be empty',[
                         {text:'Okay'}
@@ -148,6 +126,7 @@ const SignInScreen = (props) => {
                
             }
         )
+
 
         
       
@@ -176,8 +155,10 @@ const SignInScreen = (props) => {
         //     ]);
         //     return;
         // }
+        // console.log("found user:", foundUser)
         // signIn(foundUser)
     }
+
 
     return (
         <View style={styles.container}>
@@ -274,6 +255,7 @@ const SignInScreen = (props) => {
                     <TouchableOpacity
                         style={styles.signIn}
                         onPress={() => {loginHandle(data.username, data.password)}}
+                        
                     >
                     <LinearGradient
                         colors={['#08d4c4', '#01ab9d']}

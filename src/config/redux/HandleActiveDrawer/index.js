@@ -10,20 +10,35 @@ export const HandleButtonOfDrawer = (id) => ({
 })
 
 const initData = {
-    counter:0
+    counter:'Home'
 }
 
 const reducerHandleButtonOfDrawer = (state = initData, action) => {
-    console.log("id class:", action.data)
+    console.log("action.data:", action.data)
 
     switch(action.type){
         case TETAP:
             return {...state, counter:action.data}
+        case DATAUSER:
+            return{...state, data:action.data}
         default:return state;
     }
 }
+
 export const storeState = createStore(reducerHandleButtonOfDrawer);
 const TETAP = 'TETAP'
+const DATAUSER = 'DATAUSER'
+
+
+
+
+export const HandleUserActive = (foundUser) => ({
+    type:DATAUSER,
+    data:foundUser
+})
+
+
+
 
 
 

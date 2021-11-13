@@ -7,25 +7,31 @@ import {
     Platform,
     StyleSheet ,
     StatusBar,
-    Alert
+    Alert,
+    ScrollView
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-
+import axios from 'axios';
+import { AuthContext } from '../../../components/AutContext/context';
 
 const SignUpScreen = ({navigation}) => {
+
+    const {signIn} = React.useContext(AuthContext)
+
 
     const [data, setData] = React.useState({
         username: '',
         password: '',
-        check_textInputChange: false,
+        check_emailChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
         isValidUser: true,
         isValidPassword: true,
         confirm_password: '',
+        check_UserNameChange: false
     });
 
 
@@ -36,14 +42,33 @@ const SignUpScreen = ({navigation}) => {
             setData({
                 ...data, 
                 email:val,
-                check_textInputChange:true
+                check_emailChange:true
             })
         }
         else{
             setData({
                 ...data, 
                 email:val,
-                check_textInputChange:false
+                check_emailChange:false
+            })   
+        }
+    }
+
+   // userName Change
+    const handleUserNameChange = (val) => {
+
+        if(val.length != 0){
+            setData({
+                ...data, 
+                username:val,
+                check_UserNameChange:true
+            })
+        }
+        else{
+            setData({
+                ...data, 
+                username:val,
+                check_UserNameChange:false
             })   
         }
     }
@@ -80,6 +105,49 @@ const SignUpScreen = ({navigation}) => {
         });
     }
 
+    const SignUpHandle = (email, userName, password, confirm_password) =>{
+
+        const apiURL  = 'http://10.0.2.2:3000/user';
+            let data = {
+                email: email,
+                username: userName,
+                password:password,
+                userToken:`Token_${makeid()}`
+            }
+            if(password!== ''&& confirm_password!==''&& password===confirm_password && userName!== '' && email !== ''){
+                axios.post(apiURL, data)
+                .then(res=>{})
+            }      
+   
+
+
+        axios.get(apiURL).then( 
+                res =>{
+                   let a = res.data.filter(item=>{    
+                     if(item.username===data.username && item.password == data.password ){
+                         return item;
+                         }    
+                     })     
+                signIn(a);
+                }
+             )
+
+    }
+
+    
+    const makeid = ()=>{    
+            var length = 7;
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * 
+        charactersLength));
+        }
+            return result
+        }
+
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor= '#009387' barStyle="light-content"/>
@@ -87,6 +155,8 @@ const SignUpScreen = ({navigation}) => {
                 <Text style={styles.text_header}>Register Now</Text>
             </View>
             <Animatable.View style={styles.footer } animation ="fadeInUpBig">
+                <ScrollView showsVerticalScrollIndicator={false}> 
+                <>
                 <Text style={styles.text_footer}>Email</Text>
                 <View style ={styles.action}>
                     <FontAwesome
@@ -100,7 +170,7 @@ const SignUpScreen = ({navigation}) => {
                         autoCapitalize="none"
                         onChangeText={(val)=>textInputChange(val)}
                     />
-                    {data.check_textInputChange?
+                    {data.check_emailChange?
                     <Animatable.View
                         animation="bounceIn"
                     >    
@@ -113,6 +183,36 @@ const SignUpScreen = ({navigation}) => {
                     :null
                     }
                 </View>
+                </>
+                <>
+                <Text style={styles.text_footer}>User Name</Text>
+                <View style ={styles.action}>
+                    <FontAwesome
+                        name ="user-o"
+                        color ="#05375a"
+                        size= {20}
+                    />
+                    <TextInput
+                        placeholder ="your UserName"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val)=>handleUserNameChange(val)}
+                    />
+                    {data.check_UserNameChange?
+                    <Animatable.View
+                        animation="bounceIn"
+                    >    
+                        <Feather
+                            name= "check-circle"
+                            color ="green"
+                            size={20}
+                    />
+                    </Animatable.View>
+                    :null
+                    }
+                </View>
+                </>
+                <>
                 <Text style={[styles.text_footer,{
                         marginTop: 35
                 }]}>Password</Text>
@@ -145,7 +245,8 @@ const SignUpScreen = ({navigation}) => {
                         }
                     </TouchableOpacity>
                 </View>
-
+                </>
+                <>
                 <Text style={[styles.text_footer,{
                         marginTop: 35
                 }]}>Confirm Password</Text>
@@ -156,7 +257,7 @@ const SignUpScreen = ({navigation}) => {
                         size= {20}
                     />
                     <TextInput
-                        placeholder ="your Password"
+                        placeholder ="Confirm Your Password"
                         style={styles.textInput}
                         autoCapitalize="none"
                         secureTextEntry={data.confirm_secureTextEntry?true:false}
@@ -178,20 +279,22 @@ const SignUpScreen = ({navigation}) => {
                         }
                     </TouchableOpacity>
                 </View>
+                </>
 
                     <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.signIn}
-                        onPress={() => {loginHandle( data.username, data.password )}}
+                        onPress={() => {SignUpHandle( data.email, data.username, data.password, data.confirm_password )}}
+                        // onPress={() => {makeid()}}
                     >
-                    <LinearGradient
-                        colors={['#08d4c4', '#01ab9d']}
-                        style={styles.signIn}
-                    >
-                        <Text style={[styles.textSign, {
-                            color:'#fff'
-                        }]}>Sign Up</Text>
-                    </LinearGradient>
+                            <LinearGradient
+                                colors={['#08d4c4', '#01ab9d']}
+                                style={styles.signIn}
+                            >
+                                <Text style={[styles.textSign, {
+                                    color:'#fff'
+                                }]}>Sign Up</Text>
+                            </LinearGradient>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -207,7 +310,9 @@ const SignUpScreen = ({navigation}) => {
                         }]}>Sign In</Text>
                     </TouchableOpacity>
                 </View>
-                </Animatable.View>
+                </ScrollView>
+            </Animatable.View>
+
             
         </View>
     )

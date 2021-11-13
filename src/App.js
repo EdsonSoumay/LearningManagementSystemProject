@@ -34,7 +34,10 @@ import MainTabScreen from './Router/StudentBotomTab'
 
 //==>redux
 import { Provider } from 'react-redux'
-import { storeState, storeStateDrawerId } from './config/redux/index'
+import { storeState, storeStateDrawerId } from './config/redux/HandleActiveDrawer/'
+// import { storeState } from './config/redux/HandleUserActive'
+import { useDispatch, useSelector } from 'react-redux' //untuk proses penambahan dan pengurangan counter
+import { HandleUserActive } from './config/redux/HandleActiveDrawer/'
 //==>redux
 
 import FlashMessage from "react-native-flash-message";
@@ -50,6 +53,12 @@ const App2 =()=> {
 
   const [isDarkTheme, setisDarkTheme] = React.useState(false);
   const [ChangeTheme, setChangeTheme] = useState(false);
+  const [ActiveUser, setActiveUser] = useState()
+  const [ActiveButtonClass, setActiveButtonClass] = useState()
+  const [ListClass, setListClass] = useState()
+  const [TrigerOpenClass, setTrigerOpenClass] = useState()
+
+  // const dispatchRedux = useDispatch();
 
 
 
@@ -125,6 +134,9 @@ const App2 =()=> {
             // setuserToken('fgkj');
             // setIsLoading(false);
             // console.log("found User:", foundUser)
+            
+            // dispatchRedux(HandleUserActive(foundUser))
+
             const userToken = String(foundUser[0].userToken);
             const userName = foundUser[0].username;
               try{
@@ -133,9 +145,11 @@ const App2 =()=> {
                 console.log(e)
               }
               // userToken = 'dfgdfg';
-           
-            // console.log("user token:", userToken)
+
+            console.log("user token di Login:", userToken)
+            setActiveUser(userToken)
             dispatch({type:'LOGIN', id:userName, token: userToken})
+            
         },
         signOut: async ()=>{
             // setuserToken(null);
@@ -159,23 +173,41 @@ const App2 =()=> {
           if(ChangeTheme==true){
             setChangeTheme(false);
             setvalue(false);
-            console.log("true change theme:", ChangeTheme)
+            // console.log("true change theme:", ChangeTheme)
           }
 
           if(ChangeTheme==false){
 
             setChangeTheme(true);
             setvalue(true);
-            console.log("false change theme:", ChangeTheme)
+            // console.log("false change theme:", ChangeTheme)
           }
           getData();
+        },
+
+        //new
+        //handle active button in All class drawer
+        activeButton: (item)=>{
+            setActiveButtonClass(item)
+        },
+        //handle list class
+        listClass: (item)=>{
+          setListClass(item)
+        },
+
+        //handle triger open class
+        trigerOpenClass: (item)=>{
+           setTrigerOpenClass(item)
         }
+
+
 
     }))
 
     useEffect(() => {
      
-        setTimeout( async()=>{
+        setTimeout(
+           async()=>{
           let userToken;
           userToken = null;
           try{
@@ -183,9 +215,13 @@ const App2 =()=> {
           }catch(e){
             console.log(e)
           }
+          
+
+          console.log("user Token di get item:", userToken)
             // setIsLoading(false)
             dispatch({type:'RETRIEVE_TOKEN',  token: userToken})
             // dispatch({type:'REGISTER',  token: userToken})
+            setActiveUser(userToken)
         }, 1000 )
 
     }, [])
@@ -221,7 +257,7 @@ const App2 =()=> {
                       else{
                         boolVar=false
                       }
-                      console.log("get value, value di getITem:", boolVar)//returns true
+                      // console.log("get value, value di getITem:", boolVar)//returns true
                       setisDarkTheme(boolVar)
                       setChangeTheme(boolVar)
                       })
@@ -241,17 +277,20 @@ const App2 =()=> {
         )
     }
 
+    // console.log("user aktif:", ActiveUser)
+    // console.log("active button clas:", ActiveButtonClass)
+    // console.log("user aktif:", ActiveUser)
+    // console.log("list class:", ListClass)
+    // console.log("triger open class di app:", TrigerOpenClass)
+
     return (
       <Provider store={storeState}>
       <PaperProvider theme={theme}>
         <AuthContext.Provider value ={authContext}>
         <NavigationContainer theme={theme}>
             {loginState.userToken !== null ?(
-                 <Drawer.Navigator drawerContent={props => <StudentDrawerContent {...props}/>}>
-                    <Drawer.Screen name="HomeDrawer" component={TabScreen}  options={{headerShown: false}}/>
-                    {/* <Drawer.Screen name="SupportScreen" component={SupportScreen}  options={{headerShown: false}}/>
-                    <Drawer.Screen name="SettingsScreen" component={SettingsScreen}  options={{headerShown: false}}/>
-                    <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen}  options={{headerShown: false}}/> */}
+                 <Drawer.Navigator drawerContent={props => <StudentDrawerContent dataUser={ActiveUser} activeButtonClass={ActiveButtonClass} ListClass={ListClass} {...props}/>}>
+                    <Drawer.Screen name="HomeDrawer" children={(props)=><TabScreen dataUser={ActiveUser} TrigerOpenClass={TrigerOpenClass} {...props}/>} options={{headerShown: false}}/>
                 </Drawer.Navigator>        
             )
             :
@@ -261,7 +300,7 @@ const App2 =()=> {
         </NavigationContainer>
        </AuthContext.Provider>
        </PaperProvider>
-       </Provider>
+      </Provider>
     )
 }
 

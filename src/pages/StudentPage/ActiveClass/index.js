@@ -8,26 +8,22 @@ import { View, Text, TouchableOpacity, BackHandler,  Image} from 'react-native';
 // import {Gap} from '../../../components/';
 import Gap from '../../../components/atoms'
 // import { olahId } from '../../../config/redux/index';
-import { HandleButtonOfDrawer } from '../../../config/redux';
+import { HandleButtonOfDrawer } from '../../../config/redux/HandleActiveDrawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 import { AuthContext } from '../../../components/AutContext/context';
 
 const ActiveClass = (props)=> {
-  const { namaDosen, id } = props.route.params;
-  
-  const dispatch = useDispatch();
+   const {activeButton} = React.useContext(AuthContext);
 
-  const reduxFunc = (id)=>{
-    dispatch(HandleButtonOfDrawer(id))
-  }
+    const { namaDosen, id } = props.route.params; 
 
   useEffect(() => {
     const backAction = () => {
       props.navigation.goBack();
-      const id = 0
-      reduxFunc(id);
+      const id = 'Home'
+      activeButton(id);
       return true;
     };
     const backHandler = BackHandler.addEventListener(

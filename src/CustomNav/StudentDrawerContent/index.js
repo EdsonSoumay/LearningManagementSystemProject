@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import axios from 'axios';
 
 import {
@@ -30,73 +30,172 @@ import { useDispatch, useSelector } from 'react-redux' //untuk proses penambahan
 //usedispatch untuk memanggil aksi yang kita buat di action.js
 //useselector untuk menentukan store yang akan kita gunakan
 import { Provider } from 'react-redux'
-import { storeState, storeStateDrawerId } from '../../config/redux_Active_Class'
-import { storeStateOlahDrawerActive } from '../../config/redux_Active_Class'
+// import { storeState, storeStateDrawerId } from '../../config/redux_Active_Class'
+import { storeState } from '../../config/redux/HandleActiveDrawer';
+// import { storeStateOlahDrawerActive } from '../../config/redux_Active_Class'
 // import { olahId } from '../../config/redux_Active_Class'
-import { HandleButtonOfDrawer } from '../../config/redux';
+import { HandleButtonOfDrawer } from '../../config/redux/HandleActiveDrawer';
 ////->Redux
+
+
+
 
 
 export function StudentDrawerContent(props){
 
+  const {signOut, toggleTheme, activeButton, trigerOpenClass} = React.useContext(AuthContext);
+
+  console.log("active Button from All class:", props.activeButtonClass)
+
+  const [data, setData] = useState()
+  const [Active, setActive] = useState({id:'Home'})
+
+  useEffect(() => {
+    setData(props.activeButtonClass)
+   }, [props.activeButtonClass])
+
+
+
+  useEffect(() => {
+   if(data){
+      setActive({id:data})
+    }
+  }, [data])
+
+ 
+
+
+  ////==> Aktif Sesion User
+    const [user, setUser]= useState()  
+
+
+    // useEffect(() => {
+    //   // setUser(props.dataUser)
+    //   const api = 'http://10.0.2.2:3000/user';
+
+    //   axios.get(api)
+    //   .then((response) => {
+        
+    //   response.data.filter(item=>{   
+    //       if(props.dataUser==item.userToken){            
+    //             // console.log("filter:",item.Class)
+    //       setDbDosen(item.Class)
+    //       setUser(item.username)
+    //   // setUser(item.username)
+    //           }    
+    //       })
+      
+    //   }). catch((error) =>{
+    //     console.error(error);
+    //   })
+    // }, [props.dataUser])
+
+
+
+  ////==> Aktif Sesion User
+
   //dari drawer lama
 
     const [dbDosen, setDbDosen]= useState([])  
-  useEffect(() => {
-    AxiosPosts();
-    return () => {    
-    }
-  }, [])
+
+  //   useEffect(() => {
+  //   AxiosGet();
+  //   return () => {    
+  //   }
+  // }, [])
   
-  const AxiosPosts =()=>{
-    const apiURL = 'http://10.0.2.2:3000/data';
-    axios.get(apiURL)
-    .then((response) => {
-      setDbDosen(response.data)
-    }). catch((error) =>{
-      console.error(error);
-    })
-  }
+  // const AxiosGet =()=>{
+  //   const apiURL = 'http://10.0.2.2:3000/data/';
+  //   axios.get(apiURL)
+  //   .then((response) => {
+  //     console.log("\nrespon:",response.data)
+  //     setDbDosen(response.data)
+  //   }). catch((error) =>{
+  //     console.error(error);
+  //   })
+  // }
 
-  const dispatch = useDispatch();
-  const counter = useSelector(data => data.counter);
+  // const dispatch = useDispatch();
+  // const counter = useSelector(data => data.counter);
 
-  const[Active,setActive] = useState({id:0});
+  // const[Active,setActive] = useState({id:'Home'});
   
+  // const classNav = (id, nama)=>{
+  //     props.navigation.navigate('ActiveClass',{
+  //       id: id,
+  //       namaDosen:nama
+  //     })
+  // }
 
-  const classNav = (id, nama)=>{
-      props.navigation.navigate('ActiveClass',{
-        id: id,
-        namaDosen:nama
-      })
-  }
-
-  useEffect(() => {
-    setActive({id:counter})
-    return () => {
-    }
-  }, [counter])
+  // useEffect(() => {
+  //   setActive({id:counter})
+  //   return () => {
+  //   }
+  // }, [counter])
 
   const AllClassNav = ()=>{
-    const id  = 0;
-    reduxFunc(id)
+    const id  = 'Home';
+    setData(id)
     props.navigation.navigate('HomeStack')
   }
 
-  const reduxFunc = (id)=>{
-   dispatch(HandleButtonOfDrawer(id))
-}
+// //   const reduxFunc = (id)=>{
+// //    dispatch(HandleButtonOfDrawer(id))
+// // }
 
 
   const paperTheme = useTheme();
 
   const [isDarkTheme, setisDarkTheme] = React.useState(false);
 
-  const {signOut, toggleTheme} = React.useContext(AuthContext);
+
+  const signOutID = ()=>{
+    const id  = 'SignOut';
+    setData(id)
+   
+    Alert.alert(
+      'Peringatan',      
+       "Anda Yakin ingin Keluar?",
+           [
+             {
+               text: 'Tidak',
+               onPress: () =>  setData('Home')
+             },
+             {
+               text: 'Ya',
+               onPress:()=>{
+                 signOut()
+                setTimeout(() => {
+                  setData('Home')
+                }, 1000); 
+              }
+             }
+           ]
+    )
+  }
+
+  // useEffect(() => {
+  //   setActive({id:props.activeButtonClass})
+  // }, [props.activeButtonClass])
+
+
+
+
+  ////=> abstaraksi
+  
+    useEffect(() => {
+      // console.log("list class useefeect:", props.ListClass)
+      setDbDosen(props.ListClass)
+    }, [props.ListClass])
+
+
+    
+  ////=> abstaraksi
 
 
 
     return(
+      <Provider store={storeState}>
         <View style ={{flex: 2}} >
               <View style ={styles.userInfoSection}>
                   <View style = {{flexDirection: 'row', marginTop: 15}}>
@@ -109,8 +208,8 @@ export function StudentDrawerContent(props){
 
                     <View style={{marginLeft: 15, 
                       flexDirection: 'column'}}>
-                      <Title style ={styles.title}> Edson Soumay</Title>
-                      <Caption style={styles.caption}>@edsonS</Caption>
+                      <Title style ={styles.title}>{user}</Title>
+                      <Caption style={styles.caption}>{user}</Caption>
                     </View>
                   </View>
                   <View style ={styles.row}>
@@ -136,7 +235,7 @@ export function StudentDrawerContent(props){
                     }} 
                     
                     label = "Home"
-                    style={{ backgroundColor: Active.id == 0 ? 'green': 'transparent' ,margin: 20}}
+                    style={{ backgroundColor: Active.id == 'Home' ? 'green': 'transparent' ,margin: 20}}
                     onPress={
                       ()=> {
                         // props.navigation.navigate('Home')
@@ -147,21 +246,30 @@ export function StudentDrawerContent(props){
                   <Text> Your Class</Text>
           <DrawerContentScrollView {...props}>
              <View style ={styles.drawerContent}>
-                <Drawer.Section style ={styles.drawerSection}>
-                      {  
-                        dbDosen.map( (res)=>    
+                <Drawer.Section style ={styles.drawerSection}>           
+                      { dbDosen?
+                        dbDosen.map( (res)=>{
+                          return(    
                             <DrawerItem
                             style={{ backgroundColor: Active.id==res.id ? 'green': 'transparent' ,marginLeft: 30}}
                                 key={res.id}
                                 label={res.nama}
                                 onPress ={
                                   ()=>{
-                                    classNav(res.id, res.nama);
-                                      reduxFunc(res.id)
+                                    // classNav(res.id, res.nama);
+                                      // reduxFunc(res.id)
+                                      setData(res.id)
+                                      trigerOpenClass([res.id, res.nama])
+                                      
+
                                   } 
                                 }
                               />
                             )
+                          }
+                        )
+                        :
+                        null
                       }    
                 </Drawer.Section>
              </View>
@@ -186,14 +294,17 @@ export function StudentDrawerContent(props){
                 />
               }} 
               label = "Sign Out"
+              style={{ backgroundColor: Active.id == 'SignOut' ? 'green': 'transparent' ,margin: 20}}
               onPress={
                 ()=> {
-                    signOut()
+                  signOutID()
+                    // signOut()
                 }
               }
             />          
           </Drawer.Section>
         </View>
+        </Provider>
     )
 }
 

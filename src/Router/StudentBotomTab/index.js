@@ -201,9 +201,14 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 
-const TabScreen = ({data, navigation})=>{
-  console.log("data di TabScreen:", data)
-  console.log("navigation:", navigation)
+const TabScreen = ({dataUser, data, navigation, TrigerOpenClass})=>{
+
+  // console.log("triger open class di student tab:", TrigerOpenClass)
+  
+  // console.log("data di TabScreen:", data)
+  // console.log("navigation:", navigation)
+
+  // console.log("data user di tabscreen:",dataUser)
 
   // useEffect(() => {
   //   const backAction = () => {
@@ -228,7 +233,7 @@ const TabScreen = ({data, navigation})=>{
   >
     <Tab.Screen
       name="Home"
-      children={ (props)=> <HomeStackScreen data={data} />}
+      children={ (props)=> <HomeStackScreen  dataUser={dataUser} TrigerOpenClass={TrigerOpenClass}/>}
       options={{
         tabBarLabel: 'Home',
         tabBarColor: '#009387',
@@ -278,7 +283,7 @@ const tes = ()=>{
   return <Text>tes</Text>
 }
 
-const HomeStackScreen = ({navigation, data})=>{
+const HomeStackScreen = ({navigation, dataUser, TrigerOpenClass})=>{
  return (
     <Stack.Navigator
           screenOptions={{
@@ -291,8 +296,9 @@ const HomeStackScreen = ({navigation, data})=>{
               }
           }}>
               <Stack.Screen name="HomeStack" 
-              children={(props)=><AllClass data={data} {...props}/>}
+              children={(props)=><AllClass dataUser={dataUser} TrigerOpenClass={TrigerOpenClass}{...props} />}
               options ={{headerShown:false}}/>
+
               <Stack.Screen name="ActiveClass" component={ActiveClass} options ={{headerShown: false}} />
               {/* <Stack.Screen name="Settings" component={Settings} options ={{headerShown: false}} /> */}
           </Stack.Navigator>    

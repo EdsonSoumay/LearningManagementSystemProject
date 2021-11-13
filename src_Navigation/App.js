@@ -163,6 +163,8 @@ const App =()=> {
             console.log(e)
           }
             // setIsLoading(false)
+            console.log("user Token dari uf:", userToken)
+
             dispatch({type:'RETRIEVE_TOKEN',  token: userToken})
             // dispatch({type:'REGISTER',  token: userToken})
         }, 1000 )
